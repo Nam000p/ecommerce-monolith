@@ -1,0 +1,80 @@
+@startuml
+!theme plain
+top to bottom direction
+skinparam Linetype ortho
+skinparam Nodesep 50
+skinparam Ranksep 50
+skinparam PackageStyle rectangle
+
+title E-commerce Architecture: Angular (MVVM) & Spring Boot (3-Layer Orchestrator)
+
+actor "User / Amin" as User
+
+package "Client Side (Angular - MVVM Pattern)" {
+    [View (HTML Template)] as view
+    [ViewModel (Component.ts)] as vm
+    [Model (TS Interface/Service)] as model_fe
+
+    view <.down.> vm: Data Binding
+    vm .right.> model_fe : Uses
+}
+
+package "Server Side (Spring Boot - Core API & Orchestrator)" {
+    package "Presentation Layer" {
+        [Rest Controller] as controller
+    }
+
+    package "Business Logic Layer" {
+        [Service Implementation] as service
+    }
+
+    package "Data Access Layer (JPA)" {
+        [JPA Repository] as repo
+        [Entity (JPA Model)] as entity
+    }
+}
+
+package "Infrastructure & Storage" {
+    database "MySQL Database" {
+        [Relational Tables] as db
+    }
+
+    node "Local File System" {
+        [Static Images / Logs] as storage
+    }
+
+    node "MailHog (SMTP)" as mail
+}
+
+cloud "External Service" {
+    [Stripe API] as stripe
+}
+
+' --- Connectivity Flow ---
+
+User -down-> view : Interaction
+vm -down-> controller : 1. HTTP Request (JWT)
+controller -down-> service : 2. Business Logic
+
+' Persistence Flow
+service -down-> repo : 3. Call Repo
+repo .left.> entity : Mapping
+repo -down-> db : 4. SQL Query
+
+' Orchestration Flow
+service -right-> stripe : 5. Payment Intent
+service -down-> storage : 6. Read/Write Files
+service -left-> mail : 7. Send OTP (Port 1025)
+
+note right of vm
+    Handles UI Logic
+    & Subscription
+end note
+
+note right of service
+    Core Orchestrator:
+    - Process Slugs
+    - Manage Payments
+    - Dispatch Emails
+end note
+@enduml

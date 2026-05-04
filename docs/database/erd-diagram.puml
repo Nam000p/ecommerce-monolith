@@ -1,0 +1,108 @@
+@startuml
+!theme plain
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 80
+
+title E-commerce Physical ERD (Updated with Accurate Data Types)
+
+entity "users" {
+  * id : BIGINT <<PK>>
+  --
+  email : VARCHAR(255) <<UNIQUE>>
+  password : VARCHAR(512)
+  username : VARCHAR(255)
+  phone : VARCHAR(20)
+  address : VARCHAR(255)
+  role : VARCHAR(20)
+  status : VARCHAR(20)
+  created_at : TIMESTAMPTZ
+  updated_at : TIMESTAMPTZ
+}
+
+entity "verification_otps" {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK>>
+  otp_code : VARCHAR(6)
+  purpose : VARCHAR(20)
+  expiry_time : TIMESTAMPTZ
+}
+
+entity "categories" {
+  * id : BIGINT <<PK>>
+  --
+  name : VARCHAR(100) <<UNIQUE>>
+  description : TEXT
+  created_at : TIMESTAMPTZ
+  updated_at : TIMESTAMPTZ
+}
+
+entity "products" {
+  * id : BIGINT <<PK>>
+  --
+  category_id : BIGINT <<FK>>
+  name : VARCHAR(255)
+  description : TEXT
+  rating : DOUBLE
+  created_at : TIMESTAMPTZ
+  updated_at : TIMESTAMPTZ
+}
+
+entity "product_variants" {
+  * id : BIGINT <<PK>>
+  --
+  product_id : BIGINT <<FK>>
+  variant_name : VARCHAR(255)
+  price : DECIMAL(10, 2)
+  discount_rate : INT
+  stock_quantity : INT
+  image_url : VARCHAR(255)
+  created_at : TIMESTAMPTZ
+  updated_at : TIMESTAMPTZ
+}
+
+entity "carts" {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK>>
+  variant_id : BIGINT <<FK>>
+  quantity : INT
+  created_at : TIMESTAMPTZ
+  updated_at : TIMESTAMPTZ
+}
+
+entity "orders" {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK>>
+  order_date : TIMESTAMPTZ
+  total_amount : DECIMAL(10, 2)
+  shipping_address : VARCHAR(255)
+  order_status : VARCHAR(50)
+  payment_method : VARCHAR(50)
+  payment_status : VARCHAR(50)
+  created_at : TIMESTAMPTZ
+  updated_at : TIMESTAMPTZ
+}
+
+entity "order_items" {
+  * id : BIGINT <<PK>>
+  --
+  order_id : BIGINT <<FK>>
+  variant_id : BIGINT <<FK>>
+  quantity : INT
+  price_at_order : DECIMAL(10, 2)
+  created_at : TIMESTAMPTZ
+}
+
+' Relationships
+categories ||--o{ products
+products ||--o{ product_variants
+users ||--o{ carts
+product_variants ||--o{ carts
+users ||--o{ orders
+orders ||--o{ order_items
+product_variants ||--o{ order_items
+
+@enduml
