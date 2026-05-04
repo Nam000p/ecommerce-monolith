@@ -1,29 +1,31 @@
-# Java & Spring Boot
-*.class
-*.jar
-*.war
-*.ear
-target/
-.mvn/wrapper/maven-wrapper.jar
+# --- General ---
+.DS_Store
+Thumbs.db
+.env
+.env.local
 
-# IntelliJ & WebStorm (JetBrains suite)
+# --- Backend (Java/Spring) ---
+backend/target/
+backend/*.jar
+backend/*.war
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/.idea/
+backend/*.iml
+
+# --- Frontend (Angular/Node) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.idea/
+frontend/*.iml
+frontend/npm-debug.log*
+frontend/yarn-error.log*
+frontend/.editorconfig
+
+# --- IDEs (JetBrains) ---
 .idea/
 *.iml
 *.iws
 *.ipr
 out/
 .shelf/
-
-# VS Code
-.vscode/
-
-# Database & Migration (Flyway/JPA)
-*.log
-*.sql.bak
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Environment & Sensitive data
-.env
