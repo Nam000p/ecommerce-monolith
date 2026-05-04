@@ -1,0 +1,29 @@
+# Java & Spring Boot
+*.class
+*.jar
+*.war
+*.ear
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ & WebStorm (JetBrains suite)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.shelf/
+
+# VS Code
+.vscode/
+
+# Database & Migration (Flyway/JPA)
+*.log
+*.sql.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment & Sensitive data
+.env
