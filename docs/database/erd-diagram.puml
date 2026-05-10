@@ -20,15 +20,6 @@ entity "users" {
   updated_at : TIMESTAMPTZ
 }
 
-entity "verification_otps" {
-  * id : BIGINT <<PK>>
-  --
-  user_id : BIGINT <<FK>>
-  otp_code : VARCHAR(6)
-  purpose : VARCHAR(20)
-  expiry_time : TIMESTAMPTZ
-}
-
 entity "categories" {
   * id : BIGINT <<PK>>
   --
