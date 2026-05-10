@@ -2,13 +2,18 @@ services:
   mysql:
     image: mysql:8.0
     container_name: ecommerce-db
-    ports:
-      - "3306:3306"
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ecommerce_db
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
 
   mailhog:
     image: mailhog/mailhog
@@ -16,6 +21,21 @@ services:
     ports:
       - "1025:1025"
       - "8025:8025"
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: ecommerce-stripe
+    command: >
+      listen --api-key ${STRIPE_API_KEY}
+      --forward-to host.docker.internal:8080/api/v1/payments/webhook
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: ecommerce-redis
+    ports:
+      - "6379:6379"
 
 volumes:
   mysql_data:
